@@ -12,9 +12,8 @@ from pathlib import Path
 
 import argparse
 
-parser = argparse.ArgumentParser(
-    description="Fully functional WhatsApp Web bot with AI text generation.",
-    formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+parser = argparse.ArgumentParser(description="Fully functional WhatsApp Web bot with AI text generation.",
+                                 formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
 # Arguments
 parser.add_argument("--gpt_folder_name", type=str, default="gpt-2-finetuning", help="Name of the gpt-2 folder")
