@@ -19,7 +19,7 @@ parser.add_argument("--maxmonth", type=int, default=12, help="Ending month")
 parser.add_argument("--minlen", type=int, default=20, help="Shortest length of the messages")
 parser.add_argument("--maxlen", type=int, default=10000, help="Longest length of the messages")
 parser.add_argument("--bad_words", type=str, default="http, https", help="Comma separated words of words to exclude. Ex: >http, https")
-
+parser.add_argument("--onlyeng", type=bool, default=True, help="Allows to filter out non-english messages from the data-set")
 
 # This function prepares data for the model training
 def prepare():
@@ -33,7 +33,7 @@ def prepare():
     data = data.replace(to_replace="Imran Latif Official", value="Imran Latif")
     data = data.replace(to_replace="Usman Massy", value="Usman Bhatti")
 
-    # Initiate filters to apply to the data-set
+    # Create filters to apply to the data-set
     name = [name for name in args.names.split(", ")]    # name = ["name1", "name2"]
     year = [args.minyear, args.maxyear]                 # year = [yearMin, yearMax]
     month = [args.minmonth, args.maxmonth]              # month = [monthMin, monthMax]
@@ -56,14 +56,18 @@ def prepare():
     msgs = []
     for msg in fdata["msg"]:
         if not any(i in msg for i in bad_words):
-            try:
-                if ld.detect(msg) == "en":
-                    msgs.append(msg)
-            except:
-                pass
+            if not args.onlyeng:
+                msgs.append(msg)
+            else:
+                try:
+                    if ld.detect(msg) == "en":
+                        msgs.append(msg)
+                except:
+                    pass
 
     # Add message text delimiters
-    msgs = ["<|startoftext|>" + msg.strip() + "<|endoftext|>\n" for msg in msgs]
+    msgs = ["<|startoftext|>" + msg.strip() + "<|endoftext|>\n"
+            for msg in msgs]
 
     # Export it all to a text file in the root folder
     with open(args.output_txt_file, "w", encoding="utf-8") as f:

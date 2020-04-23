@@ -25,7 +25,9 @@ parser.add_argument("--cred_file", type=str, default="cred.txt", help="Name of t
 
 args = parser.parse_args()
 
-gpt_path = os.path.join(Path.cwd().parent, "{}/src".format(args.gpt_folder_name))
+gpt_path = os.path.join(
+    Path.cwd().parent,
+    "{}/src".format(args.gpt_folder_name))
 sys.path.insert(1, gpt_path)
 from auto_reply_msg import interact_model as reply
 
@@ -91,7 +93,8 @@ def read_msgs(data):
     logging.info("Let's find the 'Group' on the web page")
     time.sleep(1)
     try:
-        elem = driver.find_element_by_xpath('//span[contains(@title, "{}")]'.format(args.group))
+        elem = driver.find_element_by_xpath(
+            '//span[contains(@title, "{}")]'.format(args.group))
         elem.click()
     except:
         logging.info("Cannot find the Group. Try again")
@@ -107,7 +110,8 @@ def read_msgs(data):
         # Only append message if identifier found in the msg, discard otherwise
         if args.identifier in msg.text:
             logging.info("Identifier found. Adding entry to DataFrame")
-            data.loc[len(data)] = [pd.to_datetime(tim.text), msg.text, False]
+            data.loc[len(data)] = [pd.to_datetime(tim.text),
+                                   msg.text, False]
             # Drop duplicates from the DataFrame
             data = data.drop_duplicates(subset=["time", "message"])
 

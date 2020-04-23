@@ -35,20 +35,30 @@ def parse():
     data = pd.DataFrame({"line": msgs})
 
     # Add timestamp columns
-    data["datetime"] = [pd.to_datetime(str(i).split("-")[0]) for i in data["line"]]
+    data["datetime"] = [pd.to_datetime(str(i).split("-")[0])
+                        for i in data["line"]]
     data["month"] = [i.month for i in data["datetime"]]
     data["year"] = [i.year for i in data["datetime"]]
     data["hour"] = [i.hour for i in data["datetime"]]
     data["minute"] = [i.minute for i in data["datetime"]]
 
-    days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    days = ["Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday"]
     data["day"] = [days[i.weekday()] for i in data["datetime"]]
 
     # Add name, message and message length
-    data["name"] = [str(i).split("- ")[1].split(":")[0] for i in data["line"]]
-    data = data[data["name"].map(len) < 22] # drop rows where name is longer than 22 chars
+    data["name"] = [str(i).split("- ")[1].split(":")[0]
+                   for i in data["line"]]
+    # drop rows where name is longer than 22 chars
+    data = data[data["name"].map(len) < 22]
 
-    data["msg"] = [str(i).split("- ")[1].split(":")[1] for i in data["line"]]
+    data["msg"] = [str(i).split("- ")[1].split(":")[1]
+                   for i in data["line"]]
     data["len"] = [len(str(i)) for i in data["msg"]]
 
     # Finally, delete the main column, we don't need it anymore
