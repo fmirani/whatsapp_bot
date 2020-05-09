@@ -9,13 +9,13 @@ import tensorflow as tf
 import model, sample, encoder
 
 def interact_model(
-    message,
-    model_name='fm_model',
+    message="A quick look at the",
+    model_name='345M',
     seed=5,
     nsamples=1,
     batch_size=1,
-    length=100,
-    temperature=0.5,
+    length=50,
+    temperature=0.9,
     top_k=20,
     top_p=0.9,
 ):
@@ -25,7 +25,8 @@ def interact_model(
 
     enc = encoder.get_encoder(model_name)
     hparams = model.default_hparams()
-    with open(os.path.join('models',
+    path = os.path.dirname(__file__)
+    with open(os.path.join(path, 'models',
                            model_name,
                            'hparams.json')) as f:
         hparams.override_from_dict(json.load(f))
@@ -50,7 +51,7 @@ def interact_model(
         )
 
         saver = tf.train.Saver()
-        ckpt = tf.train.latest_checkpoint(os.path.join('models',
+        ckpt = tf.train.latest_checkpoint(os.path.join(path, 'models',
                                                        model_name))
         saver.restore(sess, ckpt)
 
